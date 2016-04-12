@@ -1,0 +1,21 @@
+{
+  "name": "hubot-messenger-bot",
+  "description": "A Hubot adapter for Facebook Messenger Platform (Bots) with zero external dependencies.",
+  "version": "1.0.0",
+  "author": "Ian Lai <os@fyianlai.com>",
+  "license": "MIT",
+  "keywords": "hubot, hubot-scripts, adapter, facebook, platform, messenger, bot",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ClaudeBot/hubot-messenger-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ClaudeBot/hubot-messenger-bot/issues"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "main": "./src/messenger.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
