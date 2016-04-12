@@ -22,6 +22,17 @@ At the time of writing, the [Send API](https://developers.facebook.com/docs/mess
 See [`src/messenger.coffee`](src/messenger.coffee) for full documentation.
 
 
+## Getting Started
+
+Refer to [**Getting Started - Messenger Platform**](https://developers.facebook.com/docs/messenger-platform/quickstart), and [**Complete Guide - Messenger Platform**](https://developers.facebook.com/docs/messenger-platform/implementation) for more information.
+
+The callback URL is `http://your-bot-address:8080/webhook/`.
+
+You can test your bot locally using [ngrok](https://ngrok.com). Run `./ngrok http 8080`, and it should return a HTTPS forwarding URL (be sure to append `/webhook/` to it).
+
+The adapter requires your _verification token_, and _access token_ to function. You can set them via environment variables. Refer to [**Configuration**](#configuration) for more information.
+
+
 ## Installation via NPM
 
 ```
@@ -41,5 +52,3 @@ Variable | Default | Description
 --- | --- | ---
 `MESSENGER_VERIFY_TOKEN` | N/A | Your bot's verification token. You can obtain one when you [create a web hook](https://developers.facebook.com/docs/messenger-platform/quickstart) to receive events for a specific page.
 `MESSENGER_ACCESS_TOKEN` | N/A | Your page access token (it is based on an app, page, and user). You can find it in the _"Token Generation"_ section of your [app dashboard](https://developers.facebook.com/apps/).
-
-Refer to ["Getting Started - Messenger Platform"](https://developers.facebook.com/docs/messenger-platform/quickstart), and ["Complete Guide - Messenger Platform"](https://developers.facebook.com/docs/messenger-platform/implementation) for more information.
