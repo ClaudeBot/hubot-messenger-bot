@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved */
 const Adapter = require('hubot').Adapter;
 const TextMessage = require('hubot').TextMessage;
+const get = require('lodash/get');
 
 class Messenger extends Adapter {
   constructor(robot) {
@@ -37,8 +38,7 @@ class Messenger extends Adapter {
     });
   }
 
-  processMsg(msg) {
-    if (msg.message.text === undefined) return;
+  processTextMsg(msg) {
     const _sender = msg.sender.id;
     const _recipient = msg.recipient.id;
     const _mid = msg.message.mid;
@@ -48,6 +48,32 @@ class Messenger extends Adapter {
       const message = new TextMessage(user, _text.trim(), _mid);
       return this.receive(message);
     });
+  }
+
+  processAttachmentMsg(msg) {
+    const attachmentType = get(msg, 'message.attachments[0].type');
+    const _sender = msg.sender.id;
+    const _recipient = msg.recipient.id;
+    const _mid = msg.message.mid;
+    const _text = `Received ${attachmentType}`;
+
+    this.createUser(_sender, _recipient, user => {
+      const message = new TextMessage(user, _text.trim(), _mid);
+      return this.receive(message);
+    });
+  }
+
+  processMsg(msg) {
+    const text = get(msg, 'message.text');
+    const attachmentType = get(msg, 'message.attachments[0].type');
+
+    if (text) {
+      return this.processTextMsg(msg);
+    }
+
+    if (attachment) {
+      return this.processAttachmentMsg(msg);
+    }
   }
 
   sendMsg(context, msg) {
