@@ -13,6 +13,7 @@
     "url": "https://github.com/yoctol/hubot-messenger-bot/issues"
   },
   "dependencies": {
+    "lodash": "^4.16.6"
   },
   "peerDependencies": {
     "hubot": "2.x"
