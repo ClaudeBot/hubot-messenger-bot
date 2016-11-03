@@ -51,11 +51,11 @@ class Messenger extends Adapter {
   }
 
   processAttachmentMsg(msg) {
-    const attachmentType = get(msg, 'message.attachments[0].type');
+    const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
     const _sender = msg.sender.id;
     const _recipient = msg.recipient.id;
     const _mid = msg.message.mid;
-    const _text = `Received ${attachmentType}`;
+    const _text = `${attachmentType}`;
 
     this.createUser(_sender, _recipient, user => {
       const message = new TextMessage(user, _text.trim(), _mid);
@@ -69,20 +69,25 @@ class Messenger extends Adapter {
 
     if (text) {
       return this.processTextMsg(msg);
-    }
-
-    if (attachment) {
+    } else if (attachmentType) {
       return this.processAttachmentMsg(msg);
     }
   }
 
-  sendMsg(context, msg) {
+  sendButtonMsg(context, text, buttons) {
     const data = JSON.stringify({
       recipient: {
         id: context.user.id,
       },
       message: {
-        text: msg.substring(0, 320),
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: text.substring(0, 320),
+            buttons,
+          },
+        },
       },
     });
 
@@ -95,8 +100,37 @@ class Messenger extends Adapter {
       });
   }
 
-  send(envelope, ...strings) {
-    return this.sendMsg(envelope, strings.join('\n'));
+  sendTextMsg(context, text) {
+    const data = JSON.stringify({
+      recipient: {
+        id: context.user.id,
+      },
+      message: {
+        text: text.substring(0, 320),
+      },
+    });
+
+    this.robot.http(`${this.apiURL}/me/messages?access_token=${this.accessToken}`)
+      .header('Content-Type', 'application/json').post(data)((err, httpRes, body) => {
+        if (err || httpRes.statusCode !== 200) {
+          return this.robot.logger.error(`hubot-messenger-bot: error sending message - ${body} ${httpRes.statusCode} (${err})`);
+        }
+        return this.robot.logger.info('hubot-messenger-bot: post successed!');
+      });
+  }
+
+  send(envelope, para) {
+    const type = para.type;
+    const text = para.text;
+
+    switch (type) {
+      case 'button':
+        return this.sendButtonMsg(envelope, text, para.buttons);
+      case 'text':
+        return this.sendTextMsg(envelope, text);
+      default:
+        return this.sendTextMsg(envelope, text);
+    }
   }
 
   reply(envelope, ...strings) {
