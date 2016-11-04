@@ -38,11 +38,11 @@ class Messenger extends Adapter {
     });
   }
 
-  processTextMsg(msg) {
+  processTextMsg(msg, text) {
     const _sender = msg.sender.id;
     const _recipient = msg.recipient.id;
     const _mid = msg.message.mid;
-    const _text = msg.message.text;
+    const _text = text;
 
     this.createUser(_sender, _recipient, user => {
       const message = new TextMessage(user, _text.trim(), _mid);
@@ -50,8 +50,7 @@ class Messenger extends Adapter {
     });
   }
 
-  processAttachmentMsg(msg) {
-    const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
+  processAttachmentMsg(msg, attachmentType) {
     const _sender = msg.sender.id;
     const _recipient = msg.recipient.id;
     const _mid = msg.message.mid;
@@ -63,14 +62,28 @@ class Messenger extends Adapter {
     });
   }
 
+  processPayload(msg, payload) {
+    const _sender = msg.sender.id;
+    const _recipient = msg.recipient.id;
+    const _text = payload;
+
+    this.createUser(_sender, _recipient, user => {
+      const message = new TextMessage(user, _text.trim());
+      return this.receive(message);
+    });
+  }
+
   processMsg(msg) {
     const text = get(msg, 'message.text');
-    const attachmentType = get(msg, 'message.attachments[0].type');
+    const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
+    const payload = get(msg, 'postback.payload'); // USER_DEFINED_PAYLOAD
 
     if (text) {
-      return this.processTextMsg(msg);
+      return this.processTextMsg(msg, text);
     } else if (attachmentType) {
-      return this.processAttachmentMsg(msg);
+      return this.processAttachmentMsg(msg, attachmentType);
+    } else if (payload) {
+      return this.processPayload(msg, payload);
     }
   }
 
@@ -127,8 +140,6 @@ class Messenger extends Adapter {
       case 'button':
         return this.sendButtonMsg(envelope, text, para.buttons);
       case 'text':
-        return this.sendTextMsg(envelope, text);
-      default:
         return this.sendTextMsg(envelope, text);
     }
   }
