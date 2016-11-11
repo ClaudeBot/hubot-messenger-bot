@@ -73,10 +73,23 @@ class Messenger extends Adapter {
     });
   }
 
+  processDelivery(msg, text) {
+    const _sender = msg.sender.id;
+    const _recipient = msg.recipient.id;
+    const _mids = msg.delivery.mids;
+    const _text = text;
+
+    this.createUser(_sender, _recipient, user => {
+      const message = new TextMessage(user, _text.trim(), _mids);
+      return this.receive(message);
+    });
+  }
+
   processMsg(msg) {
     const text = get(msg, 'message.text');
     const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
     const payload = get(msg, 'postback.payload'); // USER_DEFINED_PAYLOAD
+    const delivery = get(msg, 'delivery');
 
     if (text) {
       return this.processTextMsg(msg, text);
@@ -84,6 +97,8 @@ class Messenger extends Adapter {
       return this.processAttachmentMsg(msg, attachmentType);
     } else if (payload) {
       return this.processPayload(msg, payload);
+    } else if (delivery) {
+      return this.processDelivery(msg, 'Message Delivered Callback');
     }
   }
 
