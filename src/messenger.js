@@ -1,4 +1,4 @@
-/* eslint-disable import/no-unresolved */
+/* eslint-disable import/no-unresolved, consistent-return */
 const Adapter = require('hubot').Adapter;
 const TextMessage = require('hubot').TextMessage;
 const get = require('lodash/get');
@@ -100,6 +100,7 @@ class Messenger extends Adapter {
     } else if (delivery) {
       return this.processDelivery(msg, 'Message Delivered Callback');
     }
+    return;
   }
 
   sendButtonMsg(context, text, buttons) {
@@ -147,6 +148,26 @@ class Messenger extends Adapter {
       });
   }
 
+  sendQuickReplyMsg(context, text, quickReplies) {
+    const data = JSON.stringify({
+      recipient: {
+        id: context.user.id,
+      },
+      message: {
+        text: text.substring(0, 320),
+        quick_replies: quickReplies,
+      },
+    });
+
+    this.robot.http(`${this.apiURL}/me/messages?access_token=${this.accessToken}`)
+      .header('Content-Type', 'application/json').post(data)((err, httpRes, body) => {
+        if (err || httpRes.statusCode !== 200) {
+          return this.robot.logger.error(`hubot-messenger-bot: error sending message - ${body} ${httpRes.statusCode} (${err})`);
+        }
+        return this.robot.logger.info('hubot-messenger-bot: post successed!');
+      });
+  }
+
   send(envelope, para) {
     const type = para.type;
     const text = para.text;
@@ -156,6 +177,10 @@ class Messenger extends Adapter {
         return this.sendButtonMsg(envelope, text, para.buttons);
       case 'text':
         return this.sendTextMsg(envelope, text);
+      case 'quick_replies':
+        return this.sendQuickReplyMsg(envelope, text, para.quick_replies);
+      default:
+        return;
     }
   }
 
