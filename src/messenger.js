@@ -2,6 +2,8 @@
 const Adapter = require('hubot').Adapter;
 const TextMessage = require('hubot').TextMessage;
 const get = require('lodash/get');
+const chalk = require('chalk');
+const debug = require('debug')('hubot-messenger-bot');
 
 class Messenger extends Adapter {
   constructor(robot) {
@@ -73,32 +75,65 @@ class Messenger extends Adapter {
     });
   }
 
-  processDelivery(msg, text) {
-    const _sender = msg.sender.id;
-    const _recipient = msg.recipient.id;
-    const _mids = msg.delivery.mids;
-    const _text = text;
+  processDelivery() {
+    // no handle
+    debug(chalk.magenta('processDelivery not handle now'));
+    return;
+  }
 
-    this.createUser(_sender, _recipient, user => {
-      const message = new TextMessage(user, _text.trim(), _mids);
-      return this.receive(message);
-    });
+  processRead() {
+    // no handle
+    debug(chalk.magenta('processRead not handle now'));
+    return;
+  }
+
+  processEchoTextMsg(msg, text) {
+    // FIXME
+    debug(chalk.magenta('processEchoTextMsg not handle now'));
+    return;
+  }
+
+  processEchoAttachmentMsg(msg, attachments) {
+    // FIXME
+    debug(chalk.magenta('processEchoAttachmentMsg not handle now'));
+    return;
+  }
+
+  processEcho(msg) {
+    const text = get(msg, 'message.text');
+    const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
+    if (text) {
+      return this.processEchoTextMsg(msg, text);
+    } else if (attachmentType) {
+      return this.processEchoAttachmentMsg(msg, message.attachments);
+    }
+    return;
   }
 
   processMsg(msg) {
+    debug(chalk.red(new Date().toISOString()));
+    debug(chalk.green('trying to process msg..'));
+    debug(chalk.green(JSON.stringify(msg, null, 2)));
+
+    const isEcho = get(msg, 'message.is_echo');
+    const delivery = get(msg, 'delivery');
+    const read = get(msg, 'read');
+    const payload = get(msg, 'postback.payload'); // DEVELOPER_DEFINED_PAYLOAD
     const text = get(msg, 'message.text');
     const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
-    const payload = get(msg, 'postback.payload'); // USER_DEFINED_PAYLOAD
-    const delivery = get(msg, 'delivery');
 
-    if (text) {
+    if (isEcho) {
+      return this.processEcho(msg);
+    } else if (delivery) {
+      return this.processDelivery();
+    } else if (read) {
+      return this.processRead();
+    } else if (payload) {
+      return this.processPayload(msg, payload);
+    } else if (text) {
       return this.processTextMsg(msg, text);
     } else if (attachmentType) {
       return this.processAttachmentMsg(msg, attachmentType);
-    } else if (payload) {
-      return this.processPayload(msg, payload);
-    } else if (delivery) {
-      return this.processDelivery(msg, 'Message Delivered Callback');
     }
     return;
   }
@@ -169,6 +204,10 @@ class Messenger extends Adapter {
   }
 
   send(envelope, para) {
+    debug(chalk.red(new Date().toISOString()));
+    debug(chalk.blue('trying to sending message..'));
+    debug(chalk.blue(JSON.stringify(envelope, null, 2)));
+
     const type = para.type;
     const text = para.text;
 
