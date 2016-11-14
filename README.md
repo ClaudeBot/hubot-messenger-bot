@@ -42,7 +42,7 @@ npm install --save hubot-messenger-bot
 Now, run Hubot with the `messenger-bot` adapter:
 
 ```
-./bin/hubot -a messenger-bot
+DEBUG=hubot ./bin/hubot -a messenger-bot
 ```
 
 
