@@ -141,6 +141,16 @@ class Messenger extends Adapter {
     return;
   }
 
+  postData(data) {
+    this.robot.http(`${this.apiURL}/me/messages?access_token=${this.accessToken}`)
+      .header('Content-Type', 'application/json').post(data)((err, httpRes, body) => {
+        if (err || httpRes.statusCode !== 200) {
+          return this.robot.logger.error(`hubot-messenger-bot: error sending message - ${body} ${httpRes.statusCode} (${err})`);
+        }
+        return this.robot.logger.info('hubot-messenger-bot: post successed!');
+      });
+  }
+
   sendButtonMsg(context, text, buttons) {
     const data = JSON.stringify({
       recipient: {
@@ -158,13 +168,7 @@ class Messenger extends Adapter {
       },
     });
 
-    this.robot.http(`${this.apiURL}/me/messages?access_token=${this.accessToken}`)
-      .header('Content-Type', 'application/json').post(data)((err, httpRes, body) => {
-        if (err || httpRes.statusCode !== 200) {
-          return this.robot.logger.error(`hubot-messenger-bot: error sending message - ${body} ${httpRes.statusCode} (${err})`);
-        }
-        return this.robot.logger.info('hubot-messenger-bot: post successed!');
-      });
+    this.postData(data);
   }
 
   sendTextMsg(context, text) {
@@ -177,13 +181,7 @@ class Messenger extends Adapter {
       },
     });
 
-    this.robot.http(`${this.apiURL}/me/messages?access_token=${this.accessToken}`)
-      .header('Content-Type', 'application/json').post(data)((err, httpRes, body) => {
-        if (err || httpRes.statusCode !== 200) {
-          return this.robot.logger.error(`hubot-messenger-bot: error sending message - ${body} ${httpRes.statusCode} (${err})`);
-        }
-        return this.robot.logger.info('hubot-messenger-bot: post successed!');
-      });
+    this.postData(data);
   }
 
   sendQuickReplyMsg(context, text, quickReplies) {
@@ -197,13 +195,7 @@ class Messenger extends Adapter {
       },
     });
 
-    this.robot.http(`${this.apiURL}/me/messages?access_token=${this.accessToken}`)
-      .header('Content-Type', 'application/json').post(data)((err, httpRes, body) => {
-        if (err || httpRes.statusCode !== 200) {
-          return this.robot.logger.error(`hubot-messenger-bot: error sending message - ${body} ${httpRes.statusCode} (${err})`);
-        }
-        return this.robot.logger.info('hubot-messenger-bot: post successed!');
-      });
+    this.postData(data);
   }
 
   send(envelope, para) {
