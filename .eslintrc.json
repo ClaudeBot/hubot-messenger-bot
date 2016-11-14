@@ -9,7 +9,9 @@
   },
   "rules": {
     "arrow-parens": "off",
-    "babel/arrow-parens": ["error", "as-needed"]
+    "babel/arrow-parens": ["error", "as-needed"],
+    "consistent-return": "off",
+    "import/no-unresolved": "off"
   },
   "plugins": [
     "babel"

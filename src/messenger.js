@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved, consistent-return */
 const Adapter = require('hubot').Adapter;
 const TextMessage = require('hubot').TextMessage;
 const get = require('lodash/get');
@@ -74,7 +73,7 @@ class Messenger extends Adapter {
       return this.receive(message);
     });
   }
-
+  /* eslint-disable class-methods-use-this */
   processDelivery() {
     // no handle
     debug(chalk.magenta('processDelivery not handle now'));
@@ -87,25 +86,24 @@ class Messenger extends Adapter {
     return;
   }
 
-  processEchoTextMsg(msg, text) {
+  processEchoTextMsg() {
     // FIXME
-    debug(chalk.magenta('processEchoTextMsg not handle now'));
     return;
   }
 
-  processEchoAttachmentMsg(msg, attachments) {
+  processEchoAttachmentMsg() {
     // FIXME
-    debug(chalk.magenta('processEchoAttachmentMsg not handle now'));
     return;
   }
+  /* eslint-enable class-methods-use-this */
 
   processEcho(msg) {
     const text = get(msg, 'message.text');
     const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
     if (text) {
-      return this.processEchoTextMsg(msg, text);
+      return this.processEchoTextMsg();
     } else if (attachmentType) {
-      return this.processEchoAttachmentMsg(msg, message.attachments);
+      return this.processEchoAttachmentMsg();
     }
     return;
   }
