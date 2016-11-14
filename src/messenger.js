@@ -118,7 +118,8 @@ class Messenger extends Adapter {
     const isEcho = get(msg, 'message.is_echo');
     const delivery = get(msg, 'delivery');
     const read = get(msg, 'read');
-    const payload = get(msg, 'postback.payload'); // DEVELOPER_DEFINED_PAYLOAD
+    const quickReplyPayload = get(msg, 'message.quick_reply.payload'); // DEVELOPER_DEFINED_PAYLOAD
+    const postbackPayload = get(msg, 'postback.payload'); // DEVELOPER_DEFINED_PAYLOAD
     const text = get(msg, 'message.text');
     const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
 
@@ -128,8 +129,10 @@ class Messenger extends Adapter {
       return this.processDelivery();
     } else if (read) {
       return this.processRead();
-    } else if (payload) {
-      return this.processPayload(msg, payload);
+    } else if (quickReplyPayload) {
+      return this.processPayload(msg, quickReplyPayload);
+    } else if (postbackPayload) {
+      return this.processPayload(msg, postbackPayload);
     } else if (text) {
       return this.processTextMsg(msg, text);
     } else if (attachmentType) {
