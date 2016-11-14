@@ -2,6 +2,8 @@
 const Adapter = require('hubot').Adapter;
 const TextMessage = require('hubot').TextMessage;
 const get = require('lodash/get');
+const chalk = require('chalk');
+const debug = require('debug')('hubot');
 
 class Messenger extends Adapter {
   constructor(robot) {
@@ -86,6 +88,10 @@ class Messenger extends Adapter {
   }
 
   processMsg(msg) {
+    debug(chalk.red(new Date().toISOString()));
+    debug(chalk.green('trying to process msg..'));
+    debug(chalk.green(JSON.stringify(msg, null, 2)));
+
     const text = get(msg, 'message.text');
     const attachmentType = get(msg, 'message.attachments[0].type'); // image, audio, video, file or location
     const payload = get(msg, 'postback.payload'); // USER_DEFINED_PAYLOAD
@@ -169,6 +175,10 @@ class Messenger extends Adapter {
   }
 
   send(envelope, para) {
+    debug(chalk.red(new Date().toISOString()));
+    debug(chalk.blue('trying to sending message..'));
+    debug(chalk.blue(JSON.stringify(envelope, null, 2)));
+
     const type = para.type;
     const text = para.text;
 
