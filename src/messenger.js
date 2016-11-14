@@ -3,7 +3,7 @@ const Adapter = require('hubot').Adapter;
 const TextMessage = require('hubot').TextMessage;
 const get = require('lodash/get');
 const chalk = require('chalk');
-const debug = require('debug')('hubot');
+const debug = require('debug')('hubot-messenger-bot');
 
 class Messenger extends Adapter {
   constructor(robot) {
