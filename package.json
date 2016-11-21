@@ -1,21 +1,35 @@
 {
-  "name": "hubot-messenger-bot",
+  "name": "hubot-messenger-bot-adapter",
   "description": "A Hubot adapter for Facebook Messenger Platform (Bots) with zero external dependencies.",
-  "version": "1.0.1",
-  "author": "Ian Lai <os@fyianlai.com>",
+  "version": "0.1.0",
+  "author": "Daniel Tseng <s92f002@gmail.com>",
   "license": "MIT",
   "keywords": "hubot, hubot-scripts, adapter, facebook, platform, messenger, bot",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ClaudeBot/hubot-messenger-bot.git"
+    "url": "git://github.com/yoctol/hubot-messenger-bot.git"
   },
   "bugs": {
-    "url": "https://github.com/ClaudeBot/hubot-messenger-bot/issues"
+    "url": "https://github.com/yoctol/hubot-messenger-bot/issues"
   },
-  "dependencies": {},
-  "peerDependencies": {},
-  "main": "./src/messenger.coffee",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "debug": "^2.3.2",
+    "lodash": "^4.16.6"
+  },
+  "peerDependencies": {
+    "hubot": "2.x"
+  },
+  "main": "./src/messenger.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src",
+    "test": "npm run lint"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.8.1",
+    "eslint-config-yoctol-base": "^0.8.1",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-import": "^2.0.1"
   }
 }
