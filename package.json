@@ -1,8 +1,8 @@
 {
-  "name": "hubot-messenger-bot",
+  "name": "hubot-messenger-bot-adapter",
   "description": "A Hubot adapter for Facebook Messenger Platform (Bots) with zero external dependencies.",
-  "version": "1.0.1",
-  "author": "Yoctol Dev Team<dev@yoctol.com>",
+  "version": "0.1.0",
+  "author": "Daniel Tseng <s92f002@gmail.com>",
   "license": "MIT",
   "keywords": "hubot, hubot-scripts, adapter, facebook, platform, messenger, bot",
   "repository": {
