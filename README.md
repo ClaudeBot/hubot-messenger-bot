@@ -32,6 +32,7 @@ You can test your bot locally using [ngrok](https://ngrok.com). Run `./ngrok htt
 
 The adapter requires your _verification token_, and _access token_ to function. You can set them via environment variables. Refer to [**Configuration**](#configuration) for more information.
 
+You need to run: curl -ik -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=<page_access_token>" to subscribe your app to get updates from this page.
 
 ## Installation via NPM
 
